@@ -1,0 +1,160 @@
+<html>
+<head>
+<style>
+html, body {
+
+	height: 100%;
+	margin: 0px;
+}
+#map {
+	height: 100%;
+}
+</style>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMHvCW3VgMQUvvj757BZi23wqwTua76MQ&callback=initMap"></script>
+<script>
+
+var map;
+
+function initMap() {
+
+	// Las coordenadas de la universidad
+	var posicionInicial = {lat:-33.01325638196061, lng:-71.54096782207489};
+
+	// Obtenemos el nodo mapa desde el documento
+	var nodo = document.getElementById("map");
+
+	// Ocultar todos los items ecepto los nombres de las calles (ej aeropuerto, paraderos, locales)
+	var styleArray = [
+	  {
+		featureType: "all",
+		stylers: [
+		  { visibility: "off" }
+		]
+	  },
+	  {
+		featureType: "road",
+		stylers: [
+		  { visibility: "on" }
+		]
+	  }
+	];
+
+	//La variable para trabajar con el mapa
+	map = new google.maps.Map(nodo, {
+
+		zoom: 17,
+		center: posicionInicial,
+		styles : styleArray,
+		mapTypeId: google.maps.MapTypeId.HYBRID
+	});
+	
+	
+	dibujarRuta();
+
+	// var service = new google.maps.places.PlacesService(map);
+	
+
+}
+
+function dibujarRuta() {
+	var infowindow = new google.maps.InfoWindow();
+	var puntos = Array(
+		{lat:-33.01420059890674, lng:-71.54238872230053},
+		{lat:-33.01370578944104, lng:-71.54010348021984},
+		{lat:-33.01216736409381, lng:-71.53948120772839},
+		{lat:-33.01217636081129, lng:-71.54143385589123},
+		{lat:-33.011753514097826, lng:-71.54317192733288},
+		{lat:-33.01076386492813, lng:-71.53949193656445},
+		{lat:-33.01216736409381, lng:-71.53631620109081},
+		{lat:-33.01330993986938, lng:-71.53716377913952}
+	);
+
+	/* Dibujar sombra */
+	var flightPathShadow = new google.maps.Polyline({
+		map : map,
+		path: puntos,
+		strokeColor: 'black',
+		strokeOpacity: 1.0,
+		strokeWeight: 4
+	});
+
+	/* Dibujar linea verde */
+	var flightPath = new google.maps.Polyline({
+
+		map : map,
+		path: puntos,
+		geodesic: true,
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+		strokeWeight: 2
+	});
+
+	/* Marcador de inicio de ruta */	
+
+	var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ffc71d",
+		new google.maps.Size(21, 34),
+		new google.maps.Point(0,0),
+		new google.maps.Point(10, 34));
+
+	var marker1 = new google.maps.Marker({
+				
+		position : puntos[0],
+		map : map,
+		icon : pinImage,
+		title : "Punto de partida"
+	});
+
+	var marker2 = new google.maps.Marker({
+				
+		position : puntos[1],
+		map : map,
+		icon : pinImage,
+		title : "Punto de partida"
+	});
+
+    
+
+	var self = new google.maps.Marker({
+				
+		position : puntos[2],
+		map : map,
+		icon : pinImage,
+		title : "Punto de partida"
+	});
+	
+	/* Marcador de final de ruta */
+	
+	pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|fb4848",
+		new google.maps.Size(21, 34),
+		new google.maps.Point(0,0),
+		new google.maps.Point(10, 34));
+
+	self = new google.maps.Marker({
+				
+		position : puntos[puntos.length-1],
+		map : map,
+		icon : pinImage,
+		title : "Punto de termino"
+	});
+
+	map.setCenter( puntos[0] );
+	google.maps.event.addListener(marker2, 'click', function() {
+      infowindow.setContent('<div><strong>TITULO 5555555<strong></div>');
+      infowindow.open(map, marker2);
+    });
+
+    google.maps.event.addListener(marker1, 'click', function() {
+      infowindow.setContent('<div><strong>TITULO 999999<strong></div>');
+      infowindow.open(map, marker1);
+    });
+}
+
+</script>
+
+
+
+</head>
+<body>
+<div id="map"></div>
+</body>
+</html>
